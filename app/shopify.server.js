@@ -12,22 +12,22 @@ import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prism
 import prisma from "./db.server";
 
 export const apiShopify = shopifyApi({
-  apiKey: process.env.SHOPIFY_API_KEY,
-  apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
+  apiKey: "f0067f0bff8184be8a9f1b7c59aae903",
+  apiSecretKey: "ba72f01fdf360010b972de17565c2643" || "",
   apiVersion: LATEST_API_VERSION,
-  scopes: process.env.SCOPES?.split(","),
-  hostName: process.env.SHOPIFY_APP_URL || "",
+  scopes: ["read_script_tags", "write_script_tags"],
+  hostName: "http://viperprotect.store",
   isEmbeddedApp: false,
   restResources
 })
 
 
 const shopify = shopifyApp({
-  apiKey: process.env.SHOPIFY_API_KEY,
-  apiSecretKey: process.env.SHOPIFY_API_SECRET || "",
+  apiKey: "f0067f0bff8184be8a9f1b7c59aae903",
+  apiSecretKey: "ba72f01fdf360010b972de17565c2643",
   apiVersion: LATEST_API_VERSION,
-  scopes: process.env.SCOPES?.split(","),
-  appUrl: process.env.SHOPIFY_APP_URL || "",
+  scopes: ["read_script_tags", "write_script_tags"],
+  appUrl: "http://viperprotect.store",
   authPathPrefix: "/auth",
   sessionStorage: new PrismaSessionStorage(prisma),
   distribution: AppDistribution.AppStore,
