@@ -228,6 +228,13 @@ export default function Index() {
               <span className="slider"></span>
           </label>
       </div>
+      <div className="option">
+          <label>Bloquear Links Externos (Anti-DMCA):</label>
+          <label className="switch">
+              <input type="checkbox" id="anti-dmca" disabled={isInReq} checked={scriptsStatus[""]} onChange={() => { handleAct("", scriptsStatus[""]) }}></input>
+              <span className="slider"></span>
+          </label>
+      </div>
       <div>
         <span>
           {isInReq && <div style={{
