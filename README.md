@@ -44,3 +44,7 @@
 ```bash
 curl http://localhost:4040/api/tunnels/
 ```
+### Comando Adicionais
+```bash
+  ls Lista o Diretorio
+```
