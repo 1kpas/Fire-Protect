@@ -4,6 +4,7 @@ import {
   useLoaderData,
   useSubmit
 } from "@remix-run/react";
+
 import { useEffect, useState } from "react";
 import { apiShopify, authenticate } from "../shopify.server";
 
@@ -88,7 +89,6 @@ export default function Index() {
   const l = useActionData()
   const [isInReq, setIsInReq] = useState(false)
   const [scriptsStatus, setScriptsStatus] = useState({})  
-  const [isAntiDmcaEnabled, setAntiDmcaEnabled] = useState(false);
 
   useEffect(() => {
     let data = {}
@@ -159,9 +159,7 @@ export default function Index() {
     setIsInReq(true)
     status ? removeScript(src) : addScript(src)
   }
-    const handleAntiDmcaToggle = () => {
-    setAntiDmcaEnabled(!isAntiDmcaEnabled);
-  };
+  
 
   return (
     <div className="container">
@@ -229,68 +227,96 @@ export default function Index() {
               <input type="checkbox" id="blockDevTools" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]} onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]) }}></input>
               <span className="slider"></span>
           </label>
-   <div className="option">
-          <label>Bloquear Links Externos (Anti-DMCA):</label>
+      </div>
+      <div className="option">
+          <label>Bloquear Links Externos (Ant-Dmca):</label>
           <label className="switch">
-              <input 
-                  type="checkbox" 
-                  id="anti-dmca" 
-                  checked={isAntiDmcaEnabled} 
-                  onChange={handleAntiDmcaToggle}
-              ></input>
+              <input type="checkbox" disabled={isInReq} /* checked={coloque o estado aqui, por exemplo: scriptsStatus["https://link-do-seu-script.js"]}*/ onChange={() => { /* Sua função de handle aqui */ }}></input>
               <span className="slider"></span>
           </label>
       </div>
 
       {isInReq && (
-      <div className="overlay">
-        <div className="popup">
-          <span role="img" aria-label="syringe">💉</span>
-          <p>O script está sendo injetado</p>
+        <div className="overlay">
+          <div className="popup">
+            <span role="img" aria-label="Injeção">💉</span>
+            Injetando script...
+          </div>
         </div>
-      </div>
-    )}
-
-    <style>{`
-      @keyframes rotate {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-
-      .option {
-        margin-bottom: 20px; /* Adiciona espaço entre os switches */
-      }
-
-      button:active {
-        transform: scale(0.95); /* Efeito de pressionar o botão */
-      }
-
-      .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.7); /* Fundo cinza escuro semi-transparente */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .popup {
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        text-align: center;
-      }
-
-      .popup span {
-        font-size: 50px;
-        display: block;
-        margin-bottom: 10px;
-      }
-    `}</style>
-  </div>
-  </div>
-);
+      )}
+      <style jsx>{`
+        .container {
+          font-family: sans-serif;
+          background-color: #f7f7f7;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+          transition: transform 0.1s, box-shadow 0.2s;
+          margin: 10px;
+        }
+        button:active {
+          transform: scale(0.95);
+        }
+        button:hover {
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .switch input:checked + .slider {
+          background-color: #4CAF50;
+        }
+        .switch {
+          position: relative;
+          display: inline-block;
+          width: 60px;
+          height: 34px;
+        }
+        .switch input { 
+          opacity: 0;
+          width: 0;
+          height: 0;
+        }
+        .slider {
+          position: absolute;
+          cursor: pointer;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-color: #ccc;
+          transition: .4s;
+        }
+        .slider:before {
+          position: absolute;
+          content: "";
+          height: 26px;
+          width: 26px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          transition: .4s;
+        }
+        .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .popup {
+          padding: 20px 40px;
+          background: #fff;
+          border-radius: 10px;
+          box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+      `}</style>
+    </div>
+  );
+}
