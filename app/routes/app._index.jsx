@@ -4,7 +4,6 @@ import {
   useLoaderData,
   useSubmit
 } from "@remix-run/react";
-
 import { useEffect, useState } from "react";
 import { apiShopify, authenticate } from "../shopify.server";
 
@@ -89,6 +88,7 @@ export default function Index() {
   const l = useActionData()
   const [isInReq, setIsInReq] = useState(false)
   const [scriptsStatus, setScriptsStatus] = useState({})  
+  const [isAntiDmcaEnabled, setAntiDmcaEnabled] = useState(false);
 
   useEffect(() => {
     let data = {}
@@ -159,7 +159,9 @@ export default function Index() {
     setIsInReq(true)
     status ? removeScript(src) : addScript(src)
   }
-  
+    const handleAntiDmcaToggle = () => {
+    setAntiDmcaEnabled(!isAntiDmcaEnabled);
+  };
 
   return (
     <div className="container">
@@ -227,35 +229,68 @@ export default function Index() {
               <input type="checkbox" id="blockDevTools" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]} onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]) }}></input>
               <span className="slider"></span>
           </label>
-          <div className="option">
-          <label>Bloquear Links Externos (Ant-DMCA por Links):</label>
+   <div className="option">
+          <label>Bloquear Links Externos (Anti-DMCA):</label>
           <label className="switch">
-              <input type="checkbox" id="blockDevTools" disabled={isInReq} checked={scriptsStatus[""]} onChange={() => { handleAct("", scriptsStatus[""]) }}></input>
+              <input 
+                  type="checkbox" 
+                  id="anti-dmca" 
+                  checked={isAntiDmcaEnabled} 
+                  onChange={handleAntiDmcaToggle}
+              ></input>
               <span className="slider"></span>
           </label>
       </div>
-      </div>
 
-
-      <div>
-        <span>
-          {isInReq && <div style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "10px"
-          }}>
-            <div style={{
-            width: "20px",
-            height: "20px",
-            borderRadius: "100%",
-            border: "1px solid black",
-            borderLeft: "none",
-            animation: "rotate 500ms infinite"
-          }}></div>
-          <span>Carregando...</span>
-            </div>}
-        </span>
+      {isInReq && (
+      <div className="overlay">
+        <div className="popup">
+          <span role="img" aria-label="syringe">💉</span>
+          <p>O script está sendo injetado</p>
+        </div>
       </div>
+    )}
+
+    <style>{`
+      @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .option {
+        margin-bottom: 20px; /* Adiciona espaço entre os switches */
+      }
+
+      button:active {
+        transform: scale(0.95); /* Efeito de pressionar o botão */
+      }
+
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7); /* Fundo cinza escuro semi-transparente */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .popup {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        text-align: center;
+      }
+
+      .popup span {
+        font-size: 50px;
+        display: block;
+        margin-bottom: 10px;
+      }
+    `}</style>
   </div>
-  );
-}
+  </div>
+);
