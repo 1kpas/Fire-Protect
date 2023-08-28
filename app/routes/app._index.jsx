@@ -227,14 +227,15 @@ export default function Index() {
               <input type="checkbox" id="blockDevTools" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]} onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]) }}></input>
               <span className="slider"></span>
           </label>
+          <div className="option">
+          <label>Bloquear Links Externos (Ant-DMCA por Links):</label>
+          <label className="switch">
+              <input type="checkbox" id="blockDevTools" disabled={isInReq} checked={scriptsStatus[""]} onChange={() => { handleAct("", scriptsStatus[""]) }}></input>
+              <span className="slider"></span>
+          </label>
       </div>
-      <div className="option">
-    <label>Bloquear Links Externos (Anti-DMCA):</label>
-    <label className="switch">
-        <input type="checkbox" id="anti-dmca" disabled={true}></input>
-        <span className="slider"></span>
-    </label>
-</div>
+      </div>
+
 
       <div>
         <span>
