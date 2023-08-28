@@ -4,7 +4,6 @@ import {
   useLoaderData,
   useSubmit
 } from "@remix-run/react";
-
 import { useEffect, useState } from "react";
 import { apiShopify, authenticate } from "../shopify.server";
 
@@ -89,6 +88,7 @@ export default function Index() {
   const l = useActionData()
   const [isInReq, setIsInReq] = useState(false)
   const [scriptsStatus, setScriptsStatus] = useState({})  
+  const [isAntiDmcaEnabled, setAntiDmcaEnabled] = useState(false);
 
   useEffect(() => {
     let data = {}
@@ -159,7 +159,9 @@ export default function Index() {
     setIsInReq(true)
     status ? removeScript(src) : addScript(src)
   }
-  
+    const handleAntiDmcaToggle = () => {
+    setAntiDmcaEnabled(!isAntiDmcaEnabled);
+  };
 
   return (
     <div className="container">
@@ -227,35 +229,51 @@ export default function Index() {
               <input type="checkbox" id="blockDevTools" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]} onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]) }}></input>
               <span className="slider"></span>
           </label>
-          <div className="option">
-          <label>Bloquear Links Externos (Ant-DMCA por Links):</label>
+   <div className="option">
+          <label>Bloquear Links Externos (Anti-DMCA):</label>
           <label className="switch">
-              <input type="checkbox" id="blockDevTools" disabled={isInReq} checked={scriptsStatus[""]} onChange={() => { handleAct("", scriptsStatus[""]) }}></input>
+              <input 
+                  type="checkbox" 
+                  id="anti-dmca" 
+                  checked={isAntiDmcaEnabled} 
+                  onChange={handleAntiDmcaToggle}
+              ></input>
               <span className="slider"></span>
           </label>
       </div>
-      </div>
 
-
-      <div>
-        <span>
-          {isInReq && <div style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "10px"
+      {isInReq && (
+          <div style={{
+              position: 'fixed',
+              bottom: '10px',
+              left: '10px',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: '10px',
+              background: 'rgba(255, 255, 255, 0.8)',
+              padding: '5px 10px',
+              borderRadius: '5px',
+              boxShadow: '0 0 5px rgba(0, 0, 0, 0.2)'
           }}>
-            <div style={{
-            width: "20px",
-            height: "20px",
-            borderRadius: "100%",
-            border: "1px solid black",
-            borderLeft: "none",
-            animation: "rotate 500ms infinite"
-          }}></div>
-          <span>Carregando...</span>
-            </div>}
-        </span>
-      </div>
-  </div>
+              <div style={{
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '100%',
+                  border: '2px solid black',
+                  borderLeft: 'none',
+                  animation: 'rotate 1s linear infinite'
+              }}></div>
+              <span>Carregando...</span>
+          </div>
+      )}
+
+      <style>{`
+          @keyframes rotate {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+          }
+      `}</style>
+    </div>
   );
 }
