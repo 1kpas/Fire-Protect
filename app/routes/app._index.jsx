@@ -229,94 +229,42 @@ export default function Index() {
           </label>
       </div>
       <div className="option">
-          <label>Bloquear Links Externos (Ant-Dmca):</label>
-          <label className="switch">
-              <input type="checkbox" disabled={isInReq} /* checked={coloque o estado aqui, por exemplo: scriptsStatus["https://link-do-seu-script.js"]}*/ onChange={() => { /* Sua função de handle aqui */ }}></input>
-              <span className="slider"></span>
-          </label>
-      </div>
+   <label>Bloquear Links Externos (Ant-DMCA):</label>
+   <label className="switch">
+       <input type="checkbox" id="blockExternalLinks" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Ant-Dmca.js"]} onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Ant-Dmca.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Ant-Dmca.js"]) }}></input>
+       <span className="slider"></span>
+   </label>
+</div>
+<div>
+  <style>
+  @keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
-      {isInReq && (
-        <div className="overlay">
-          <div className="popup">
-            <span role="img" aria-label="Injeção">💉</span>
-            Injetando script...
-          </div>
-        </div>
-      )}
-      <style jsx>{`
-        .container {
-          font-family: sans-serif;
-          background-color: #f7f7f7;
-          padding: 20px;
-          border-radius: 10px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        button {
-          transition: transform 0.1s, box-shadow 0.2s;
-          margin: 10px;
-        }
-        button:active {
-          transform: scale(0.95);
-        }
-        button:hover {
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        .switch input:checked + .slider {
-          background-color: #4CAF50;
-        }
-        .switch {
-          position: relative;
-          display: inline-block;
-          width: 60px;
-          height: 34px;
-        }
-        .switch input { 
-          opacity: 0;
-          width: 0;
-          height: 0;
-        }
-        .slider {
-          position: absolute;
-          cursor: pointer;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-color: #ccc;
-          transition: .4s;
-        }
-        .slider:before {
-          position: absolute;
-          content: "";
-          height: 26px;
-          width: 26px;
-          left: 4px;
-          bottom: 4px;
-          background-color: white;
-          transition: .4s;
-        }
-        .overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: rgba(0,0,0,0.5);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        .popup {
-          padding: 20px 40px;
-          background: #fff;
-          border-radius: 10px;
-          box-shadow: 0 2px 20px rgba(0,0,0,0.3);
-          display: flex;
-          align-items: center;
-          gap: 15px;
-        }
-      `}</style>
-    </div>
+.spinner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #333;  /* Change to desired spinner color */
+  animation: rotate 1s linear infinite;
+}
+</style>
+    {isInReq && <div style={{
+        display: "flex",
+        flexDirection: "row",
+        gap: "10px",
+        alignItems: "center"
+    }}>
+        <div className="spinner"></div>
+        <span>Carregando...</span>
+    </div>}
+</div>
+  </div>
   );
 }
