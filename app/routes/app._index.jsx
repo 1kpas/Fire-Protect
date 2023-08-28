@@ -275,5 +275,6 @@ export default function Index() {
           }
       `}</style>
     </div>
+    </div>
   );
 }
