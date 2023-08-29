@@ -228,37 +228,25 @@ export default function Index() {
               <span className="slider"></span>
           </label>
       </div>
-
-<div>
-  <style>
-  @keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.spinner {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid transparent;
-  border-top-color: #333;
-  animation: rotate 1s linear infinite;
-}
-</style>
-    {isInReq && <div style={{
-        display: "flex",
-        flexDirection: "row",
-        gap: "10px",
-        alignItems: "center"
-    }}>
-        <div className="spinner"></div>
-        <span>Carregando...</span>
-    </div>}
-</div>
+      <div>
+        <span>
+          {isInReq && <div style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "10px"
+          }}>
+            <div style={{
+            width: "20px",
+            height: "20px",
+            borderRadius: "100%",
+            border: "1px solid black",
+            borderLeft: "none",
+            animation: "rotate 500ms infinite"
+          }}></div>
+          <span>Carregando...</span>
+            </div>}
+        </span>
+      </div>
   </div>
   );
 }
