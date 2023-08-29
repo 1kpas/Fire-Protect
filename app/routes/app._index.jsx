@@ -228,13 +228,7 @@ export default function Index() {
               <span className="slider"></span>
           </label>
       </div>
-      <div className="option">
-   <label>Bloquear Links Externos (Ant-DMCA):</label>
-   <label className="switch">
-       <input type="checkbox" id="blockExternalLinks" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Ant-Dmca.js"]} onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Ant-Dmca.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Ant-Dmca.js"]) }}></input>
-       <span className="slider"></span>
-   </label>
-</div>
+
 <div>
   <style>
   @keyframes rotate {
