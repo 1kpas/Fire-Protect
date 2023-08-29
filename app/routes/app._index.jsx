@@ -245,7 +245,7 @@ export default function Index() {
   height: 20px;
   border-radius: 50%;
   border: 2px solid transparent;
-  border-top-color: #333;  /* Change to desired spinner color */
+  border-top-color: #333;
   animation: rotate 1s linear infinite;
 }
 </style>
