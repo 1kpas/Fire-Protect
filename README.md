@@ -18,6 +18,7 @@
   cd /home/app_name
   yarn install
   yarn build
+  yarn setup 
 ```
 
 ### Inicializando nova versão
@@ -47,5 +48,4 @@ curl http://localhost:4040/api/tunnels/
 ### Comando Adicionais
 ```bash
   ls Lista o Diretorio
-  yarn setup 
 ```
