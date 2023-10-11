@@ -3,13 +3,14 @@ import { Card, VerticalStack, Divider } from '@shopify/polaris';
 import Feature from '../components/Feature';
 import Amount from '../components/Amount';
 
-const Plan = ({
-  plan,
-  shopId,
-  current
-}) => {
-  const currentName = current?.name ?? 'notsubscribed'
-  const isSelectedPlan = currentName.includes(plan.name);
+export default function Index() {
+
+  const plan = {
+    features: [
+      "FUnção 1",
+      "FUnção 2"
+    ]
+  }
 
   return (
     <Card>
@@ -36,5 +37,3 @@ const Plan = ({
     </Card>
   )
 };
-
-export default Plan;
