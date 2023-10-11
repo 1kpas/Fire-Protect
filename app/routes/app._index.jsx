@@ -163,7 +163,7 @@ export default function Index() {
 
   return (
     <div className="container">
-      <h1>Configurações do Bloqueador</h1>
+      <h1>Configurações2 do Bloqueador</h1>
         <div style={{
           width: "100%",
           display: "flex",
