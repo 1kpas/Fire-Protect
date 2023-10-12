@@ -24,6 +24,11 @@ export default function App() {
           Home
         </Link>
       </ui-nav-menu>
+      <ui-nav-menu>
+        <Link to="/app/config" rel="config">
+          Configurações
+        </Link>
+      </ui-nav-menu>
       <Outlet />
     </AppProvider>
   );
