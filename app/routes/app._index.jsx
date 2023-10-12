@@ -6,7 +6,7 @@ export const loader = async ({ request }) => {
   const billingCheck = await billing.require({
     plans: [MONTHLY_PLAN, ANNUAL_PLAN],
     isTest: true,
-    onFailure:async () => redirect('/select-plan'),
+    onFailure:async () => redirect('/home'),
   });
 
   const subscription = billingCheck.appSubscriptions[0];
