@@ -17,7 +17,11 @@ const scriptList = [
 ]
 
 export const loader = async ({ request }) => {
-  const { session } = await authenticate.admin(request);
+  
+
+  const { session, billing } = await authenticate.admin(request);
+
+  console.log(billing)
 
   const apiScriptTag = await apiShopify.rest.ScriptTag.all({
     session
