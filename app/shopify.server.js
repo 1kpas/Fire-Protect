@@ -28,13 +28,13 @@ export const ANNUAL_PLAN = 'Annual subscription';
 const shopify = shopifyApp({
   billing: {
     [MONTHLY_PLAN]: {
-      amount: 9.8,
-      currencyCode: 'BRL',
+      amount: 5,
+      currencyCode: 'USD',
       interval: BillingInterval.Every30Days,
     },
     [ANNUAL_PLAN]: {
-      amount: 99.25,
-      currencyCode: 'BRL',
+      amount: 50,
+      currencyCode: 'USD',
       interval: BillingInterval.Annual,
     },
   },
