@@ -3,6 +3,7 @@ import { restResources } from '@shopify/shopify-api/rest/admin/2022-10';
 import "@shopify/shopify-app-remix/adapters/node";
 import {
   AppDistribution,
+  BillingInterval,
   DeliveryMethod,
   LATEST_API_VERSION,
   shopifyApp,
@@ -21,8 +22,22 @@ export const apiShopify = shopifyApi({
   restResources
 })
 
+export const MONTHLY_PLAN = 'Monthly subscription';
+export const ANNUAL_PLAN = 'Annual subscription';
 
 const shopify = shopifyApp({
+  billing: {
+    [MONTHLY_PLAN]: {
+      amount: 5,
+      currencyCode: 'USD',
+      interval: BillingInterval.Every30Days,
+    },
+    [ANNUAL_PLAN]: {
+      amount: 50,
+      currencyCode: 'USD',
+      interval: BillingInterval.Annual,
+    },
+  },
   apiKey: "f0067f0bff8184be8a9f1b7c59aae903",
   apiSecretKey: "ba72f01fdf360010b972de17565c2643",
   apiVersion: LATEST_API_VERSION,
