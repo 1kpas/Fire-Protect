@@ -9,5 +9,5 @@ export const loader = async ({ request }) => {
     onFailure: async () => billing.request({ plan: MONTHLY_PLAN })
   });
 
-  return redirect('/home')
+  return redirect('/app/home')
 };
