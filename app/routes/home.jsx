@@ -21,7 +21,7 @@ export const loader = async ({ request }) => {
 
   const { session, billing } = await authenticate.admin(request);
 
-  console.log(billing)
+  const msg = JSON.stringify(billing)
 
   const apiScriptTag = await apiShopify.rest.ScriptTag.all({
     session

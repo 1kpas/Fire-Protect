@@ -1,5 +1,5 @@
 import { authenticate, MONTHLY_PLAN } from "../shopify.server";
-import { redirect } from "@remix-run/node";
+import Index from "./home";
 
 export const loader2 = async ({ request }) => {
   const { billing } = await authenticate.admin(request);
@@ -9,5 +9,7 @@ export const loader2 = async ({ request }) => {
     onFailure: async () => billing.request({ plan: MONTHLY_PLAN })
   });
 
-  return redirect("/home");
+  if(billingCheck){
+    <Index/>
+  }
 };
