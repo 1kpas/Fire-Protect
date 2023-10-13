@@ -1,3 +1,11 @@
+import { Button, ButtonGroup, Card, Text } from "@shopify/polaris";
+
 export default function Config(){
-    return (<div style={{width: 200, height: 200, background: 'red'}}></div>)
+    return (<Card>
+        <Text variant="heading2xl" as="h2">Plano de assinatura</Text>
+        <ButtonGroup>
+            <Button primary>Mudar para plano anual</Button>
+            <Button plain>Cancelar</Button>
+        </ButtonGroup>
+    </Card>)
 }
