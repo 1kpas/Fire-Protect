@@ -1,4 +1,4 @@
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
@@ -14,7 +14,7 @@ export async function loader({ request }) {
   await billing.require({
     plans: [MONTHLY_PLAN],
     isTest: true,
-    onFailure: async () => billing.request({ plan: MONTHLY_PLAN }),
+    onFailure: async () => redirect('/app/config'),
   });
 
   return json({ apiKey: process.env.SHOPIFY_API_KEY });
