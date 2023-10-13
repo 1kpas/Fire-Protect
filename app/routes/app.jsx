@@ -2,11 +2,8 @@ import { json } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
-import st from "./_index/style.css";
 
 import { authenticate } from "../shopify.server";
-
-export const links = () => [{ rel: "stylesheet", href: st }];
 
 export async function loader({ request }) {
   await authenticate.admin(request);
