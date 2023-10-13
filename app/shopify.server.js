@@ -29,12 +29,12 @@ const shopify = shopifyApp({
   billing: {
     [MONTHLY_PLAN]: {
       amount: 5,
-      currencyCode: 'USD',
+      currencyCode: 'BRL',
       interval: BillingInterval.Every30Days,
     },
     [ANNUAL_PLAN]: {
       amount: 50,
-      currencyCode: 'USD',
+      currencyCode: 'BRL',
       interval: BillingInterval.Annual,
     },
   },
