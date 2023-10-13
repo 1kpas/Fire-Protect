@@ -1,251 +1,230 @@
-import { json } from "@remix-run/node";
+import { useEffect } from "react";
+import { json, redirect } from "@remix-run/node";
+import { useActionData, useNavigation, useSubmit } from "@remix-run/react";
 import {
-  useActionData,
-  useLoaderData,
-  useSubmit
-} from "@remix-run/react";
-import { useEffect, useState } from "react";
-import { apiShopify, authenticate } from "../shopify.server";
+  Page,
+  Layout,
+  Text,
+  VerticalStack,
+  Card,
+  Button,
+  HorizontalStack,
+  Box,
+  Divider,
+  List,
+  Link,
+} from "@shopify/polaris";
 
-const scriptList = [
-  "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-F12.js",
-  "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js",
-  "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Soucer.js",
-  "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Copy.js",
-  "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Content.js"
-]
+import { authenticate } from "../shopify.server";
 
 export const loader = async ({ request }) => {
-  const { session } = await authenticate.admin(request);
+  await authenticate.admin(request);
 
-  const apiScriptTag = await apiShopify.rest.ScriptTag.all({
-    session
-  })
-  
-  return json({ 
-    shop: session.shop.replace(".myshopify.com", ""),
-    activeScripts: apiScriptTag.data
-   });
+  return null;
 };
 
-/**
- * 
- * @param {{ request: Request }} param0 
- * @returns 
- */
 export async function action({ request }) {
-  const { session } = await authenticate.admin(request);
-
-  /**
-   * @type {{src: string, method: "ADD" | "REMOVE" | "ADD_ALL" | "REMOVE_ALL"}}
-   */
-  const data = JSON.parse(await request.text())
-
-  const apiScriptTag = new apiShopify.rest.ScriptTag({
-    session
-  })
-  
-  if (data.method === "ADD") {
-    apiScriptTag.src = data.src
-    apiScriptTag.event = "onload"
-    await apiScriptTag.save()
-  } else if (data.method === "REMOVE") {
-    const scripts = await apiShopify.rest.ScriptTag.all({
-      session
-    })
-      
-    for (const script of scripts.data) {
-      if (script.src === data.src) {
-        apiScriptTag.id = script.id
-        await apiScriptTag.delete()
-      }
-    }
-  } else if (data.method === "ADD_ALL") {
-    for (const script of scriptList) {
-      apiScriptTag.src = script
-      apiScriptTag.event = "onload"
-      await apiScriptTag.save()
-    }
-  } else {
-    const scripts = await apiShopify.rest.ScriptTag.all({
-      session
-    })
-      
-    for (const script of scripts.data) {
-      apiScriptTag.id = script.id
-      await apiScriptTag.delete()
-    }
-  }
-
- return {
-  finished: true
- }
+  return redirect('/select-plan')
 }
 
 export default function Index() {
-  const { activeScripts } = useLoaderData()
+  const nav = useNavigation();
+  const actionData = useActionData();
   const submit = useSubmit();
-  const l = useActionData()
-  const [isInReq, setIsInReq] = useState(false)
-  const [scriptsStatus, setScriptsStatus] = useState({})  
+
+  const isLoading =
+    ["loading", "submitting"].includes(nav.state) && nav.formMethod === "POST";
+
+  const productId = actionData?.product?.id.replace(
+    "gid://shopify/Product/",
+    ""
+  );
 
   useEffect(() => {
-    let data = {}
-
-    for (const x of activeScripts) {
-      if(data[x] == null) {
-        data = {
-          ...data,
-          [x.src]: true
-        }
-      }
+    if (productId) {
+      shopify.toast.show("Product created");
     }
+  }, [productId]);
 
-    setScriptsStatus(data)
-  }, [activeScripts])
-
-  useEffect(() => {
-    if (l?.finished) {
-      setTimeout(() => {
-        setIsInReq(false)
-      }, 200)
-    }
-  }, [l])
-
-  const addScript = (src) => {
-    submit(JSON.stringify({
-      src,
-      method: "ADD"
-    }), {
-      method: "POST",
-      encType: "application/json"
-    })
-  }
-
-  const addAllScript = () => {
-    setIsInReq(true)
-    submit(JSON.stringify({
-      method: "ADD_ALL"
-    }), {
-      method: "POST",
-      encType: "application/json"
-    })
-  };
-
-
-  const removeScript = (src) => {
-    submit(JSON.stringify({
-      src,
-      method: "REMOVE"
-    }), {
-      method: "POST",
-      encType: "application/json"
-    })
-  }
-
-  const removeAllScript = () => {
-   setIsInReq(true)
-   submit(JSON.stringify({
-      method: "REMOVE_ALL"
-    }), {
-      method: "POST",
-      encType: "application/json"
-    })
-  console.log("FInished")
-}
-
-  const handleAct = (src, status) => {
-    setIsInReq(true)
-    status ? removeScript(src) : addScript(src)
-  }
-  
+  const generateProduct = () => submit({}, { replace: true, method: "POST" });
 
   return (
-    <div className="container">
-      <h1>Configurações do Bloqueador</h1>
-        <div style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingBottom: "40px",
-          fontFamily: "sans-serif"
-        }}>
-          <div>
-              <button disabled={isInReq} onClick={() => { addAllScript() }} style={{
-                border: "none",
-                padding: "10px 10px",
-                background: "green",
-                color: "white",
-                borderRadius: "10px",
-                fontSize: "0.9rem"
-              }}>Ativar todos scripts</button>
-          </div>
-          <div>
-              <button disabled={isInReq} onClick={() => { removeAllScript() }} style={{
-                border: "none",
-                padding: "10px 10px",
-                background: "orange",
-                color: "white",
-                borderRadius: "10px",
-                fontSize: "0.9rem",
-              }}>Desativar todos scripts</button>
-          </div>
-      </div>
-      <div className="option">
-          <label>Bloquear F12:</label>
-          <label className="switch">
-              <input type="checkbox" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-F12.js"]} id="blockF12" onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-F12.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-F12.js"]) }}></input>
-              <span className="slider"></span>
-          </label>
-      </div>
-      <div className="option">
-          <label>Bloquear Conteúdo:</label>
-          <label className="switch">
-              <input type="checkbox" id="blockContent" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Content.js"]} onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Content.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Content.js"]) }}></input>
-              <span className="slider"></span>
-          </label>
-      </div>
-      <div className="option">
-          <label>Bloquear Ctrl+C (Copiar):</label>
-          <label className="switch">
-              <input type="checkbox" id="blockCopy" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Copy.js"]} onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Copy.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Copy.js"])}}></input>
-              <span className="slider"></span>
-          </label>
-      </div>
-      <div className="option">
-          <label>Bloquear Ctrl+U (Ver código fonte):</label>
-          <label className="switch">
-              <input type="checkbox" id="blockSource" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Soucer.js"]} onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Soucer.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Soucer.js"]) }}></input>
-              <span className="slider"></span>
-          </label>
-      </div>
-      <div className="option">
-          <label>Bloquear Ctrl+Shift+I (Ferramentas do desenvolvedor):</label>
-          <label className="switch">
-              <input type="checkbox" id="blockDevTools" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]} onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]) }}></input>
-              <span className="slider"></span>
-          </label>
-      </div>
-      <div>
-        <span>
-          {isInReq && <div style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "10px"
-          }}>
-            <div style={{
-            width: "20px",
-            height: "20px",
-            borderRadius: "100%",
-            border: "1px solid black",
-            borderLeft: "none",
-            animation: "rotate 500ms infinite"
-          }}></div>
-          <span>Carregando...</span>
-            </div>}
-        </span>
-      </div>
-  </div>
+    <Page>
+      <ui-title-bar title="Remix app template">
+        <button variant="primary" onClick={generateProduct}>
+          Generate a product
+        </button>
+      </ui-title-bar>
+      <VerticalStack gap="5">
+        <Layout>
+          <Layout.Section>
+            <Card>
+              <VerticalStack gap="5">
+                <VerticalStack gap="2">
+                  <Text as="h2" variant="headingMd">
+                    Congrats on creating a new Shopify app 🎉
+                  </Text>
+                  <Text variant="bodyMd" as="p">
+                    This embedded app template uses{" "}
+                    <Link
+                      url="https://shopify.dev/docs/apps/tools/app-bridge"
+                      target="_blank"
+                    >
+                      App Bridge
+                    </Link>{" "}
+                    interface examples like an{" "}
+                    <Link url="/app/additional">
+                      additional page in the app nav
+                    </Link>
+                    , as well as an{" "}
+                    <Link
+                      url="https://shopify.dev/docs/api/admin-graphql"
+                      target="_blank"
+                    >
+                      Admin GraphQL
+                    </Link>{" "}
+                    mutation demo, to provide a starting point for app
+                    development.
+                  </Text>
+                </VerticalStack>
+                <VerticalStack gap="2">
+                  <Text as="h3" variant="headingMd">
+                    Get started with products
+                  </Text>
+                  <Text as="p" variant="bodyMd">
+                    Generate a product with GraphQL and get the JSON output for
+                    that product. Learn more about the{" "}
+                    <Link
+                      url="https://shopify.dev/docs/api/admin-graphql/latest/mutations/productCreate"
+                      target="_blank"
+                    >
+                      productCreate
+                    </Link>{" "}
+                    mutation in our API references.
+                  </Text>
+                </VerticalStack>
+                <HorizontalStack gap="3" align="end">
+                  {actionData?.product && (
+                    <Button
+                      url={`shopify:admin/products/${productId}`}
+                      target="_blank"
+                    >
+                      View product
+                    </Button>
+                  )}
+                  <Button loading={isLoading} primary onClick={generateProduct}>
+                    Generate a product
+                  </Button>
+                </HorizontalStack>
+                {actionData?.product && (
+                  <Box
+                    padding="4"
+                    background="bg-subdued"
+                    borderColor="border"
+                    borderWidth="1"
+                    borderRadius="2"
+                    overflowX="scroll"
+                  >
+                    <pre style={{ margin: 0 }}>
+                      <code>{JSON.stringify(actionData.product, null, 2)}</code>
+                    </pre>
+                  </Box>
+                )}
+              </VerticalStack>
+            </Card>
+          </Layout.Section>
+          <Layout.Section secondary>
+            <VerticalStack gap="5">
+              <Card>
+                <VerticalStack gap="2">
+                  <Text as="h2" variant="headingMd">
+                    App template specs
+                  </Text>
+                  <VerticalStack gap="2">
+                    <Divider />
+                    <HorizontalStack align="space-between">
+                      <Text as="span" variant="bodyMd">
+                        Framework
+                      </Text>
+                      <Link url="https://remix.run" target="_blank">
+                        Remix
+                      </Link>
+                    </HorizontalStack>
+                    <Divider />
+                    <HorizontalStack align="space-between">
+                      <Text as="span" variant="bodyMd">
+                        Database
+                      </Text>
+                      <Link url="https://www.prisma.io/" target="_blank">
+                        Prisma
+                      </Link>
+                    </HorizontalStack>
+                    <Divider />
+                    <HorizontalStack align="space-between">
+                      <Text as="span" variant="bodyMd">
+                        Interface
+                      </Text>
+                      <span>
+                        <Link url="https://polaris.shopify.com" target="_blank">
+                          Polaris
+                        </Link>
+                        {", "}
+                        <Link
+                          url="https://shopify.dev/docs/apps/tools/app-bridge"
+                          target="_blank"
+                        >
+                          App Bridge
+                        </Link>
+                      </span>
+                    </HorizontalStack>
+                    <Divider />
+                    <HorizontalStack align="space-between">
+                      <Text as="span" variant="bodyMd">
+                        API
+                      </Text>
+                      <Link
+                        url="https://shopify.dev/docs/api/admin-graphql"
+                        target="_blank"
+                      >
+                        GraphQL API
+                      </Link>
+                    </HorizontalStack>
+                  </VerticalStack>
+                </VerticalStack>
+              </Card>
+              <Card>
+                <VerticalStack gap="2">
+                  <Text as="h2" variant="headingMd">
+                    Next steps
+                  </Text>
+                  <List spacing="extraTight">
+                    <List.Item>
+                      Build an{" "}
+                      <Link
+                        url="https://shopify.dev/docs/apps/getting-started/build-app-example"
+                        target="_blank"
+                      >
+                        {" "}
+                        example app
+                      </Link>{" "}
+                      to get started
+                    </List.Item>
+                    <List.Item>
+                      Explore Shopify’s API with{" "}
+                      <Link
+                        url="https://shopify.dev/docs/apps/tools/graphiql-admin-api"
+                        target="_blank"
+                      >
+                        GraphiQL
+                      </Link>
+                    </List.Item>
+                  </List>
+                </VerticalStack>
+              </Card>
+            </VerticalStack>
+          </Layout.Section>
+        </Layout>
+      </VerticalStack>
+    </Page>
   );
 }
