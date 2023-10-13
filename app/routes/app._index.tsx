@@ -1,4 +1,4 @@
-import { LoaderArgs, redirect } from "@remix-run/node";
+import { LoaderArgs } from "@remix-run/node";
 import { authenticate, MONTHLY_PLAN } from "../shopify.server";
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -9,5 +9,8 @@ export const loader = async ({ request }: LoaderArgs) => {
     isTest: true,
   });
 
-  return redirect('/principal')
 };
+
+export default function Index(){
+  return <div style={{width: 200, height: 200, background: 'red'}}></div>
+}
