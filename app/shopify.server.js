@@ -29,12 +29,12 @@ const shopify = shopifyApp({
   billing: {
     [MONTHLY_PLAN]: {
       amount: 5,
-      currencyCode: 'BRL',
+      currencyCode: 'USD',
       interval: BillingInterval.Every30Days,
     },
     [ANNUAL_PLAN]: {
       amount: 50,
-      currencyCode: 'BRL',
+      currencyCode: 'USD',
       interval: BillingInterval.Annual,
     },
   },
@@ -62,9 +62,6 @@ const shopify = shopifyApp({
     ? { customShopDomains: [process.env.SHOP_CUSTOM_DOMAIN] }
     : {}),
 });
-
-
-
 
 export default shopify;
 export const apiVersion = LATEST_API_VERSION;
