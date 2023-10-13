@@ -19,7 +19,10 @@ export async function loader({ request }) {
   const subscription = billingCheck.appSubscriptions[0];
   console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
 
-  return json({ apiKey: process.env.SHOPIFY_API_KEY });
+  if(billingCheck.hasActivePayment){
+    return json({ apiKey: process.env.SHOPIFY_API_KEY });
+  }
+
 }
 
 export default function App() {
