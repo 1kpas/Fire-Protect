@@ -1,23 +1,26 @@
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
 import st from "./_index/style.css";
 
-import { MONTHLY_PLAN, authenticate } from "../shopify.server";
+import { ANNUAL_PLAN, MONTHLY_PLAN, authenticate } from "../shopify.server";
 
 export const links = () => [{ rel: "stylesheet", href: st }];
 
 export async function loader({ request }) {
   const { billing } = await authenticate.admin(request);
-  
-  await billing.require({
-    plans: [MONTHLY_PLAN],
+  const billingCheck = await billing.require({
+    plans: [MONTHLY_PLAN, ANNUAL_PLAN],
     isTest: true,
-    onFailure: async () => billing.request({ plan: MONTHLY_PLAN }),
+    onFailure: async () => redirect('/select-plan'),
   });
 
-  return json({ apiKey: process.env.SHOPIFY_API_KEY });
+  if(billingCheck.hasActivePayment){
+    return json({ apiKey: process.env.SHOPIFY_API_KEY });
+  }
+
+  return null;
 }
 
 export default function App() {
