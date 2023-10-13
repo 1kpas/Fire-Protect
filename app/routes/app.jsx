@@ -34,6 +34,9 @@ export default function App() {
         <Link to="/app" rel="home">
           Home
         </Link>
+        <Link to="/app/panel" rel="panel">
+          Painel de Controle
+        </Link>
         <Link to="/app/config" rel="config">
           Configurações
         </Link>
