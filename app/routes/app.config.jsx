@@ -1,4 +1,4 @@
-import { Button, Card, Text } from "@shopify/polaris";
+import { Button, Text } from "@shopify/polaris";
 
 export default function Config(){
     return (<div style={{background: "white", padding: 20}}>
