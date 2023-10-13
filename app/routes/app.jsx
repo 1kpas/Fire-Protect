@@ -4,18 +4,20 @@ import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
 import st from "./_index/style.css";
 
-import { MONTHLY_PLAN, authenticate } from "../shopify.server";
+import { ANNUAL_PLAN, MONTHLY_PLAN, authenticate } from "../shopify.server";
 
 export const links = () => [{ rel: "stylesheet", href: st }];
 
 export async function loader({ request }) {
   const { billing } = await authenticate.admin(request);
-  
-  await billing.require({
-    plans: [MONTHLY_PLAN],
+  const billingCheck = await billing.require({
+    plans: [MONTHLY_PLAN, ANNUAL_PLAN],
     isTest: true,
     onFailure: async () => redirect('/app/config'),
   });
+
+  const subscription = billingCheck.appSubscriptions[0];
+  console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
 
   return json({ apiKey: process.env.SHOPIFY_API_KEY });
 }
