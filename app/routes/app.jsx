@@ -17,7 +17,7 @@ export async function loader({ request }) {
   });
 
   if(billingCheck.hasActivePayment){
-    redirect('/app/panel')
+    redirect('/app')
   }
 
   return json({ apiKey: process.env.SHOPIFY_API_KEY });
@@ -31,9 +31,6 @@ export default function App() {
       <ui-nav-menu>
         <Link to="/app" rel="home">
           Home
-        </Link>
-        <Link to="/app/panel" rel="panel">
-          Painel de Controle
         </Link>
         <Link to="/app/config" rel="config">
           Configurações
