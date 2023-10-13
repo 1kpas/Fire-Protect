@@ -13,11 +13,14 @@ export async function loader({ request }) {
   const billingCheck = await billing.require({
     plans: [MONTHLY_PLAN, ANNUAL_PLAN],
     isTest: true,
-    onFailure: async () => redirect('/app/config'),
+    onFailure: async () => redirect('/select-plan'),
   });
 
   const subscription = billingCheck.appSubscriptions[0];
   console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
+  if(subscription.id){
+    return;
+  }
 
   return json({ apiKey: process.env.SHOPIFY_API_KEY });
 }
