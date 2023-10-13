@@ -1,7 +1,7 @@
 import { Button, Text } from "@shopify/polaris";
 import { MONTHLY_PLAN, authenticate } from "~/shopify.server";
 
-export const loader = async ({request}) => {
+export const action = async ({request}) => {
   const { billing } = await authenticate.admin(request);
   const billingCheck = await billing.require({
     plans: [MONTHLY_PLAN],
@@ -28,7 +28,7 @@ export default function Config() {
       </Text>
       <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
         <Button primary>Mudar para plano anual</Button>
-        <Button plain onClick={loader}>
+        <Button plain onClick={action}>
           Cancelar Plano
         </Button>
       </div>
