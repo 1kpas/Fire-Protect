@@ -16,23 +16,6 @@ const scriptList = [
   // "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Content.js"
 ]
 
-export const loader = async ({ request }) => {
-  
-
-  const { session, billing } = await authenticate.admin(request);
-
-  const msg = JSON.stringify(billing)
-
-  const apiScriptTag = await apiShopify.rest.ScriptTag.all({
-    session
-  })
-  
-  return json({ 
-    shop: session.shop.replace(".myshopify.com", ""),
-    activeScripts: apiScriptTag.data
-   });
-};
-
 /**
  * 
  * @param {{ request: Request }} param0 
