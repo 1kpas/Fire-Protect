@@ -10,6 +10,6 @@ export const loader = async ({ request }: LoaderArgs) => {
   });
 
   if(hasPayment){
-    return redirect('/app/config')
+    return redirect('/app/testando')
   }
 };
