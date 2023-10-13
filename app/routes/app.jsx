@@ -13,11 +13,13 @@ export async function loader({ request }) {
   const billingCheck = await billing.require({
     plans: [MONTHLY_PLAN],
     isTest: true,
-    onFailure: async () => billing.request({ plan: MONTHLY_PLAN }),
+    onFailure: async () => {
+      return await billing.request({ plan: MONTHLY_PLAN });
+    },
   });
 
-  if(billingCheck.hasActivePayment){
-    redirect('/app')
+  if (billingCheck.hasActivePayment) {
+    redirect("/app");
   }
 
   return json({ apiKey: process.env.SHOPIFY_API_KEY });
