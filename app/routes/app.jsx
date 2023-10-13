@@ -16,9 +16,6 @@ export async function loader({ request }) {
     onFailure: async () => redirect('/select-plan'),
   });
 
-  const subscription = billingCheck.appSubscriptions[0];
-  console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
-
   if(billingCheck.hasActivePayment){
     return json({ apiKey: process.env.SHOPIFY_API_KEY });
   }
