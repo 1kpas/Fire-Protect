@@ -13,7 +13,7 @@ const scriptList = [
   "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js",
   "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Soucer.js",
   "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Copy.js",
-  "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Content.js"
+  // "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Content.js"
 ]
 
 export const loader = async ({ request }) => {
@@ -225,13 +225,13 @@ export default function Index() {
               <span className="slider"></span>
           </label>
       </div>
-      <div className="option">
+      {/* <div className="option">
           <label>Bloquear Ctrl+Shift+I (Ferramentas do desenvolvedor):</label>
           <label className="switch">
               <input type="checkbox" id="blockDevTools" disabled={isInReq} checked={scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]} onChange={() => { handleAct("https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js", scriptsStatus["https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js"]) }}></input>
               <span className="slider"></span>
           </label>
-      </div>
+      </div> */}
       <div>
         <span>
           {isInReq && <div style={{
