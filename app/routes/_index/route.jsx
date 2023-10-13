@@ -1,13 +1,20 @@
 import { json, redirect } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 
-import { login } from "../../shopify.server";
+import { ANNUAL_PLAN, MONTHLY_PLAN, authenticate, login } from "../../shopify.server";
 
 import indexStyles from "./style.css";
 
 export const links = () => [{ rel: "stylesheet", href: indexStyles }];
 
 export async function loader({ request }) {
+
+  const { billing } = await authenticate.admin(request);
+  await billing.require({
+    plans: [MONTHLY_PLAN, ANNUAL_PLAN],
+    isTest: true,
+    onFailure: async () => redirect('/select-plan'),
+  });
 
   const url = new URL(request.url);
 
