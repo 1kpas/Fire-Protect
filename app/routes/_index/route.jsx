@@ -8,13 +8,6 @@ import indexStyles from "./style.css";
 export const links = () => [{ rel: "stylesheet", href: indexStyles }];
 
 export async function loader({ request }) {
-  
-  const { billing } = await authenticate.admin(request);
-  await billing.require({
-    plans: [MONTHLY_PLAN],
-    onFailure: async () => await billing.request({ plan: MONTHLY_PLAN }),
-    isTest: true,
-  });
 
   const url = new URL(request.url);
 
