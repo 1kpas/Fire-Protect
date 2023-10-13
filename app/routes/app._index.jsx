@@ -4,7 +4,6 @@ import {
   useLoaderData,
   useSubmit
 } from "@remix-run/react";
-
 import { useEffect, useState } from "react";
 import { apiShopify, authenticate } from "../shopify.server";
 
