@@ -9,13 +9,6 @@ export const links = () => [{ rel: "stylesheet", href: indexStyles }];
 
 export async function loader({ request }) {
 
-  const { billing } = await authenticate.admin(request);
-  await billing.require({
-    plans: [MONTHLY_PLAN, ANNUAL_PLAN],
-    isTest: true,
-    onFailure: async () => redirect('/select-plan'),
-  });
-
   const url = new URL(request.url);
 
   if (url.searchParams.get("shop")) {
