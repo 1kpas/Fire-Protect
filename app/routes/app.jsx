@@ -4,12 +4,18 @@ import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
 import st from "./_index/style.css";
 
-import { authenticate } from "../shopify.server";
+import { MONTHLY_PLAN, authenticate } from "../shopify.server";
 
 export const links = () => [{ rel: "stylesheet", href: st }];
 
 export async function loader({ request }) {
-  await authenticate.admin(request);
+  const { billing } = await authenticate.admin(request);
+  
+  await billing.require({
+    plans: [MONTHLY_PLAN],
+    isTest: true,
+    onFailure: async () => billing.request({ plan: MONTHLY_PLAN }),
+  });
 
   return json({ apiKey: process.env.SHOPIFY_API_KEY });
 }
