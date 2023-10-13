@@ -18,9 +18,6 @@ export async function loader({ request }) {
 
   const subscription = billingCheck.appSubscriptions[0];
   console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
-  if(subscription.id){
-    return;
-  }
 
   return json({ apiKey: process.env.SHOPIFY_API_KEY });
 }
