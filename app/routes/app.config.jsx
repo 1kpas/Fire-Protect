@@ -1,16 +1,25 @@
 import { Button, Text } from "@shopify/polaris";
-import { loader } from "./subscriptionUtils"; // Substitua pelo local correto do seu arquivo
+import { MONTHLY_PLAN, authenticate } from "~/shopify.server";
+
+export const loader = async ({request}) => {
+  const { billing } = await authenticate.admin(request);
+  const billingCheck = await billing.require({
+    plans: [MONTHLY_PLAN],
+    onFailure: async () => billing.request({ plan: MONTHLY_PLAN }),
+  });
+
+  const subscription = billingCheck.appSubscriptions[0];
+  await billing.cancel({
+    subscriptionId: subscription.id,
+    isTest: true,
+    prorate: true,
+   });
+
+}
 
 export default function Config() {
-  const handleCancelPlan = async () => {
-    try {
-      await loader(); // Função para cancelar o plano
-      alert("Plano cancelado com sucesso!"); // Exiba uma mensagem de sucesso
-    } catch (error) {
-      console.error("Erro ao cancelar o plano:", error);
-      alert("Erro ao cancelar o plano. Por favor, tente novamente.");
-    }
-  };
+  
+  
 
   return (
     <div style={{ background: "white", padding: 20 }}>
@@ -19,7 +28,7 @@ export default function Config() {
       </Text>
       <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
         <Button primary>Mudar para plano anual</Button>
-        <Button plain onClick={handleCancelPlan}>
+        <Button plain onClick={loader}>
           Cancelar Plano
         </Button>
       </div>
