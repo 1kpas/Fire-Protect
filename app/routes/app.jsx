@@ -10,15 +10,11 @@ export const links = () => [{ rel: "stylesheet", href: st }];
 
 export async function loader({ request }) {
   const { billing } = await authenticate.admin(request);
-  const billingCheck = await billing.require({
-    plans: [MONTHLY_PLAN, ANNUAL_PLAN],
+  await billing.require({
+    plans: [MONTHLY_PLAN],
     isTest: true,
     onFailure: async () => redirect('/select-plan'),
   });
-
-  if(!billingCheck.hasActivePayment){
-    return null;
-  }
 
   return json({ apiKey: process.env.SHOPIFY_API_KEY });
 }
