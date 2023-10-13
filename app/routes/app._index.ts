@@ -9,5 +9,5 @@ export const loader = async ({ request }: LoaderArgs) => {
     isTest: true,
   });
 
-  return redirect('/app/config')
+  return redirect('/principal')
 };
