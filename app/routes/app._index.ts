@@ -5,7 +5,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const { billing } = await authenticate.admin(request);
   await billing.require({
     plans: [MONTHLY_PLAN],
-    onFailure: () => billing.request({ plan: MONTHLY_PLAN }),
+    onFailure: async () => await billing.request({ plan: MONTHLY_PLAN }),
     isTest: true,
   });
 
