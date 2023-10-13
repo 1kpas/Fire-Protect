@@ -10,12 +10,14 @@ export const links = () => [{ rel: "stylesheet", href: st }];
 
 export async function loader({ request }) {
   const { billing } = await authenticate.admin(request);
-  
-  await billing.require({
+  const billingCheck = await billing.require({
     plans: [MONTHLY_PLAN, ANNUAL_PLAN],
     isTest: true,
     onFailure: async () => redirect('/select-plan'),
   });
+
+  const subscription = billingCheck.appSubscriptions[0];
+  console.log(`Shop is on ${subscription.name} (id ${subscription.id})`);
 
   return json({ apiKey: process.env.SHOPIFY_API_KEY });
 }
