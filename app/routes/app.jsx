@@ -16,10 +16,11 @@ export async function loader({ request }) {
     onFailure: async () => redirect('/select-plan'),
   });
 
-  if(billingCheck.hasActivePayment){
-    return json({ apiKey: process.env.SHOPIFY_API_KEY });
+  if(!billingCheck.hasActivePayment){
+    return null;
   }
 
+  return json({ apiKey: process.env.SHOPIFY_API_KEY });
 }
 
 export default function App() {
