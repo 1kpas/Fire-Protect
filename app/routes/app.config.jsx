@@ -1,24 +1,14 @@
+import { redirect } from "@remix-run/node";
+import { useSubmit } from "@remix-run/react";
 import { Button, Text } from "@shopify/polaris";
-import { MONTHLY_PLAN, authenticate } from "~/shopify.server";
 
-export const action = async ({request}) => {
-  const { billing } = await authenticate.admin(request);
-  const billingCheck = await billing.require({
-    plans: [MONTHLY_PLAN],
-    onFailure: async () => billing.request({ plan: MONTHLY_PLAN }),
-  });
-
-  const subscription = billingCheck.appSubscriptions[0];
-  await billing.cancel({
-    subscriptionId: subscription.id,
-    isTest: true,
-    prorate: true,
-   });
-
+export async function action({ request }) {
+  return redirect('/cancel-plan')
 }
 
 export default function Config() {
-  
+  const submit = useSubmit();
+  const cancelPlan = () => submit({}, { replace: true, method: "POST" });
   
 
   return (
@@ -28,7 +18,7 @@ export default function Config() {
       </Text>
       <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
         <Button primary>Mudar para plano anual</Button>
-        <Button plain onClick={action}>
+        <Button plain onClick={cancelPlan}>
           Cancelar Plano
         </Button>
       </div>
