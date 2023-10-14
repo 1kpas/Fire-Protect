@@ -1,3 +1,5 @@
 export default function CancelPlan(){
-    return (<div style={{width: 200, height: 200, background: 'red'}}></div>)
+    return (<div>
+        <h2>Plano cancelado com sucesso!</h2>
+    </div>)
 }

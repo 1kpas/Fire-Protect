@@ -3,7 +3,7 @@ import { useSubmit } from "@remix-run/react";
 import { Button, Text } from "@shopify/polaris";
 
 export async function action({ request }) {
-  return redirect('/cancel-plan')
+  return redirect('/app/cancel-plan')
 }
 
 export default function Config() {
