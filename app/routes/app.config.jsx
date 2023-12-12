@@ -1,6 +1,7 @@
 import { useSubmit } from "@remix-run/react";
-import { Card, Page, Layout, TextContainer, TextStyle, Button } from "@shopify/polaris";
-import { BASIC_PLAN, STANDARD_PLAN, PREMIUM_PLAN } from '../shopify.server'; // Importando os nomes dos planos
+import { Card, Page, Layout, TextContainer, Button } from "@shopify/polaris"; // Removemos TextStyle da importação
+
+import { BASIC_PLAN, STANDARD_PLAN, PREMIUM_PLAN } from '../shopify.server';
 
 export default function ChoosePlan() {
   const submit = useSubmit();
@@ -8,7 +9,7 @@ export default function ChoosePlan() {
   const PlanCard = ({ title, benefits, onSelect }) => (
     <Card sectioned>
       <TextContainer>
-        <TextStyle variation="strong">{title}</TextStyle>
+        <h2>{title}</h2> {/* Utilizamos um cabeçalho h2 em vez de TextStyle */}
         {benefits.map((benefit, index) => (
           <p key={index}>{benefit}</p>
         ))}
