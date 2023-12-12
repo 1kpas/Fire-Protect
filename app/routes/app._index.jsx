@@ -1,31 +1,37 @@
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import {
-  useActionData,
   useLoaderData,
   useSubmit
 } from "@remix-run/react";
 import { useEffect, useState } from "react";
-import { apiShopify, authenticate } from "../shopify.server";
+import { apiShopify, authenticate, checkUserPlanStatus } from "../shopify.server";
 
+// Lista de scripts
 const scriptList = [
   "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-F12.js",
   "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Devtools.js",
   "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Soucer.js",
   "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Copy.js",
   "https://cdn.jsdelivr.net/gh/1kpas/viperscripts@main/Block-Content.js"
-]
+];
 
 export const loader = async ({ request }) => {
   const { session } = await authenticate.admin(request);
 
-  const apiScriptTag = await apiShopify.rest.ScriptTag.all({
-    session
-  })
-  
+  // Verifica o status do plano do usuário
+  const userHasPlan = await checkUserPlanStatus(session.shop);
+
+  // Se o usuário não tiver um plano ativo, redireciona para a página de seleção de plano
+  if (!userHasPlan) {
+    return redirect('/Choose-plan');
+  }
+
+  // Carrega os scripts ativos
+  const apiScriptTag = await apiShopify.rest.ScriptTag.all({ session });
   return json({ 
     shop: session.shop.replace(".myshopify.com", ""),
     activeScripts: apiScriptTag.data
-   });
+  });
 };
 
 /**

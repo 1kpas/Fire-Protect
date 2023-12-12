@@ -1,3 +1,5 @@
+// app.jsx
+
 import { json, redirect } from "@remix-run/node";
 import { Link, Outlet, useLoaderData, useRouteError } from "@remix-run/react";
 import { AppProvider } from "@shopify/shopify-app-remix/react";
@@ -5,6 +7,7 @@ import { boundary } from "@shopify/shopify-app-remix/server";
 import st from "./_index/style.css";
 
 import { BASIC_PLAN, STANDARD_PLAN, PREMIUM_PLAN, authenticate } from "../shopify.server"; // Importe os três planos
+import ChoosePlan from "./ChoosePlan"; // Importe a página ChoosePlan
 
 export const links = () => [{ rel: "stylesheet", href: st }];
 
