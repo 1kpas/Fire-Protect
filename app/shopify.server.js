@@ -17,7 +17,7 @@ export const apiShopify = shopifyApi({
   apiSecretKey: "ba72f01fdf360010b972de17565c2643" || "",
   apiVersion: LATEST_API_VERSION,
   scopes: ["read_script_tags", "write_script_tags"],
-  hostName: "https://a10b-179-191-6-117.ngrok-free.app/",
+  hostName: "https://viperprotect.store/",
   isEmbeddedApp: false,
   restResources
 })
@@ -49,7 +49,7 @@ const shopify = shopifyApp({
   apiSecretKey: "ba72f01fdf360010b972de17565c2643",
   apiVersion: LATEST_API_VERSION,
   scopes: ["read_script_tags", "write_script_tags"],
-  appUrl: "https://a10b-179-191-6-117.ngrok-free.app/",
+  appUrl: "https://viperprotect.store/",
   authPathPrefix: "/auth",
   sessionStorage: new PrismaSessionStorage(prisma),
   distribution: AppDistribution.AppStore,
