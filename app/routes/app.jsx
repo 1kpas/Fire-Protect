@@ -4,17 +4,18 @@ import { AppProvider } from "@shopify/shopify-app-remix/react";
 import { boundary } from "@shopify/shopify-app-remix/server";
 import st from "./_index/style.css";
 
-import { MONTHLY_PLAN, authenticate } from "../shopify.server";
+import { BASIC_PLAN, STANDARD_PLAN, PREMIUM_PLAN, authenticate } from "../shopify.server"; // Importe os três planos
 
 export const links = () => [{ rel: "stylesheet", href: st }];
 
 export async function loader({ request }) {
   const { billing } = await authenticate.admin(request);
   const billingCheck = await billing.require({
-    plans: [MONTHLY_PLAN],
+    plans: [BASIC_PLAN, STANDARD_PLAN, PREMIUM_PLAN], // Use os três planos
     isTest: true,
     onFailure: async () => {
-      return await billing.request({ plan: MONTHLY_PLAN });
+      // Pode usar um dos três planos como fallback, por exemplo: plan: BASIC_PLAN
+      return await billing.request({ plan: BASIC_PLAN });
     },
   });
 
