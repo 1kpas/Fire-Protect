@@ -17,32 +17,39 @@ export const apiShopify = shopifyApi({
   apiSecretKey: "ba72f01fdf360010b972de17565c2643" || "",
   apiVersion: LATEST_API_VERSION,
   scopes: ["read_script_tags", "write_script_tags"],
-  hostName: "https://viperprotect.store",
+  hostName: "https://a10b-179-191-6-117.ngrok-free.app/",
   isEmbeddedApp: false,
   restResources
 })
 
-export const MONTHLY_PLAN = 'Monthly subscription';
-export const ANNUAL_PLAN = 'Annual subscription';
+// Definição dos novos planos
+export const BASIC_PLAN = 'Basic Plan';
+export const STANDARD_PLAN = 'Standard Plan';
+export const PREMIUM_PLAN = 'Premium Plan';
 
 const shopify = shopifyApp({
   billing: {
-    [MONTHLY_PLAN]: {
-      amount: 5,
+    [BASIC_PLAN]: {
+      amount: 9.90, // Preço do plano básico
       currencyCode: 'USD',
       interval: BillingInterval.Every30Days,
     },
-    [ANNUAL_PLAN]: {
-      amount: 50,
+    [STANDARD_PLAN]: {
+      amount: 25.90, // Preço do plano padrão
       currencyCode: 'USD',
-      interval: BillingInterval.Annual,
+      interval: BillingInterval.Every30Days,
+    },
+    [PREMIUM_PLAN]: {
+      amount: 48.50, // Preço do plano premium
+      currencyCode: 'USD',
+      interval: BillingInterval.Every30Days,
     },
   },
   apiKey: "f0067f0bff8184be8a9f1b7c59aae903",
   apiSecretKey: "ba72f01fdf360010b972de17565c2643",
   apiVersion: LATEST_API_VERSION,
   scopes: ["read_script_tags", "write_script_tags"],
-  appUrl: "https://viperprotect.store",
+  appUrl: "https://a10b-179-191-6-117.ngrok-free.app/",
   authPathPrefix: "/auth",
   sessionStorage: new PrismaSessionStorage(prisma),
   distribution: AppDistribution.AppStore,
@@ -63,7 +70,31 @@ const shopify = shopifyApp({
     : {}),
 });
 
+// Função para verificar o status da assinatura do aplicativo
+export async function checkUserPlanStatus(shop, accessToken) {
+  const client = new shopifyApi.Clients.GraphQL(shop, accessToken);
 
+  const QUERY = `
+    {
+      currentAppInstallation {
+        activeSubscriptions {
+          status
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await client.query({ data: QUERY });
+    const subscriptions = response.body.data.currentAppInstallation.activeSubscriptions;
+
+    // Verifica se há alguma assinatura ativa
+    return subscriptions.some(subscription => subscription.status === 'ACTIVE');
+  } catch (error) {
+    console.error('Erro ao verificar o status da assinatura:', error);
+    return false; // Retorna false em caso de erro
+  }
+}
 
 export default shopify;
 export const apiVersion = LATEST_API_VERSION;

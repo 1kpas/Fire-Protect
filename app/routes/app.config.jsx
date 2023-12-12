@@ -1,27 +1,71 @@
-import { redirect } from "@remix-run/node";
 import { useSubmit } from "@remix-run/react";
-import { Button, Text } from "@shopify/polaris";
+import { Card, Page, Layout, TextContainer, TextStyle, Button } from "@shopify/polaris";
+import { BASIC_PLAN, STANDARD_PLAN, PREMIUM_PLAN } from '../shopify.server'; // Importando os nomes dos planos
 
-export async function action({ request }) {
-  return redirect('/app/cancel-plan')
-}
-
-export default function Config() {
+export default function ChoosePlan() {
   const submit = useSubmit();
-  const cancelPlan = () => submit({}, { replace: true, method: "POST" });
-  
+
+  const PlanCard = ({ title, benefits, onSelect }) => (
+    <Card sectioned>
+      <TextContainer>
+        <TextStyle variation="strong">{title}</TextStyle>
+        {benefits.map((benefit, index) => (
+          <p key={index}>{benefit}</p>
+        ))}
+      </TextContainer>
+      <Button onClick={onSelect}>Escolher este plano</Button>
+    </Card>
+  );
+
+  const selectPlan = (plan) => () => {
+    // Aqui será adicionada a lógica de atualização do plano
+    console.log("Plano selecionado:", plan);
+    // Por exemplo: submit({ plan }, { method: "POST" });
+  };
 
   return (
-    <div style={{ background: "white", padding: 20 }}>
-      <Text variant="heading2xl" as="h2">
-        Plano de assinatura
-      </Text>
-      <div style={{ display: "flex", flexDirection: "row", gap: 10 }}>
-        <Button primary>Mudar para plano anual</Button>
-        <Button plain onClick={cancelPlan}>
-          Cancelar Plano
-        </Button>
-      </div>
-    </div>
+    <Page>
+      <Layout>
+        <Layout.Section>
+          <PlanCard 
+            title="Plano Básico" 
+            benefits={[
+              "Benefício 1 do Plano Básico",
+              "Benefício 2 do Plano Básico",
+              "Benefício 3 do Plano Básico",
+              "Benefício 4 do Plano Básico",
+              "Benefício 5 do Plano Básico"
+            ]}
+            onSelect={selectPlan(BASIC_PLAN)}
+          />
+        </Layout.Section>
+        <Layout.Section secondary>
+          <PlanCard 
+            title="Plano Padrão" 
+            benefits={[
+              "Benefício 1 do Plano Padrão",
+              "Benefício 2 do Plano Padrão",
+              "Benefício 3 do Plano Padrão",
+              "Benefício 4 do Plano Padrão",
+              "Benefício 5 do Plano Padrão"
+            ]}
+            onSelect={selectPlan(STANDARD_PLAN)}
+          />
+        </Layout.Section>
+        <Layout.Section>
+          <PlanCard 
+            title="Plano Premium" 
+            benefits={[
+              "Benefício 1 do Plano Premium",
+              "Benefício 2 do Plano Premium",
+              "Benefício 3 do Plano Premium",
+              "Benefício 4 do Plano Premium",
+              "Benefício 5 do Plano Premium"
+            ]}
+            onSelect={selectPlan(PREMIUM_PLAN)}
+          />
+        </Layout.Section>
+      </Layout>
+    </Page>
   );
 }
