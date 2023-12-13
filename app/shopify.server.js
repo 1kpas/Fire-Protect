@@ -22,6 +22,8 @@ export const apiShopify = shopifyApi({
   restResources
 })
 
+
+
 // Definição dos novos planos
 export const BASIC_PLAN = 'Basic Plan';
 export const STANDARD_PLAN = 'Standard Plan';
@@ -71,8 +73,9 @@ const shopify = shopifyApp({
 });
 
 // Função para verificar o status da assinatura do aplicativo
-export async function checkUserPlanStatus(shop, accessToken) {
-  const client = new shopifyApi.Clients.GraphQL(shop, accessToken);
+export async function checkUserPlanStatus(shop) {
+  const session = await shopify.sessionStorage.loadSession(shop);
+  const client = new shopifyApi.Clients.GraphQL(shop, session.accessToken);
 
   const QUERY = `
     {
@@ -88,11 +91,10 @@ export async function checkUserPlanStatus(shop, accessToken) {
     const response = await client.query({ data: QUERY });
     const subscriptions = response.body.data.currentAppInstallation.activeSubscriptions;
 
-    // Verifica se há alguma assinatura ativa
     return subscriptions.some(subscription => subscription.status === 'ACTIVE');
   } catch (error) {
     console.error('Erro ao verificar o status da assinatura:', error);
-    return false; // Retorna false em caso de erro
+    return false;
   }
 }
 

@@ -32,6 +32,11 @@ export async function loader({ request }) {
 export default function App() {
   const { apiKey } = useLoaderData();
 
+  // Verifica se o usuário não tem uma assinatura ativa e redireciona para ChoosePlan
+  if (!billingCheck.hasActivePayment) {
+    return <ChoosePlan />;
+  }
+
   return (
     <AppProvider isEmbeddedApp apiKey={apiKey}>
       <ui-nav-menu>

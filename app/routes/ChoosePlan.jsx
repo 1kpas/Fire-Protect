@@ -1,72 +1,72 @@
-// ChoosePlan.jsx
-
 import { useSubmit } from "@remix-run/react";
-import { Card, Page, Layout, TextContainer, Button } from "@shopify/polaris"; // Removemos TextStyle da importação
+import { Card, Page, Layout, TextContainer, Button, Stack } from "@shopify/polaris";
 
 import { BASIC_PLAN, STANDARD_PLAN, PREMIUM_PLAN } from '../shopify.server';
 
-export default function ChoosePlan() {
+export default function ChoosePlan({ currentPlan }) {
   const submit = useSubmit();
 
-  const PlanCard = ({ title, benefits, onSelect }) => (
-    <Card sectioned>
-      <TextContainer>
-        <h2>{title}</h2> {/* Utilizamos um cabeçalho h2 em vez de TextStyle */}
-        {benefits.map((benefit, index) => (
-          <p key={index}>{benefit}</p>
-        ))}
-      </TextContainer>
-      <Button onClick={onSelect}>Escolher este plano</Button>
-    </Card>
+  const cardStyle = {
+    backgroundColor: '#f4f6f8',
+    borderRadius: '8px',
+    padding: '20px',
+    margin: '10px 0',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+  };
+
+  const titleStyle = {
+    fontSize: '1.2rem',
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: '10px'
+  };
+
+  const buttonStyle = {
+    backgroundColor: '#5c6ac4',
+    color: 'white',
+    padding: '10px 15px',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer'
+  };
+
+  const PlanCard = ({ title, benefits, onSelect, isCurrentPlan }) => (
+    <div style={cardStyle}>
+      <div style={titleStyle}>{title}</div>
+      {benefits.map((benefit, index) => <p key={index}>{benefit}</p>)}
+      <Button primary onClick={onSelect} style={buttonStyle}>{isCurrentPlan ? 'Cancelar Plano' : 'Escolher este Plano'}</Button>
+    </div>
   );
 
   const selectPlan = (plan) => () => {
-    // Aqui será adicionada a lógica de atualização do plano
     console.log("Plano selecionado:", plan);
-    // Por exemplo: submit({ plan }, { method: "POST" });
+    // submit({ plan }, { method: "POST" });
   };
 
   return (
     <Page>
       <Layout>
         <Layout.Section>
-          <PlanCard 
-            title="Plano Básico" 
-            benefits={[
-              "Benefício 1 do Plano Básico",
-              "Benefício 2 do Plano Básico",
-              "Benefício 3 do Plano Básico",
-              "Benefício 4 do Plano Básico",
-              "Benefício 5 do Plano Básico"
-            ]}
-            onSelect={selectPlan(BASIC_PLAN)}
-          />
-        </Layout.Section>
-        <Layout.Section secondary>
-          <PlanCard 
-            title="Plano Padrão" 
-            benefits={[
-              "Benefício 1 do Plano Padrão",
-              "Benefício 2 do Plano Padrão",
-              "Benefício 3 do Plano Padrão",
-              "Benefício 4 do Plano Padrão",
-              "Benefício 5 do Plano Padrão"
-            ]}
-            onSelect={selectPlan(STANDARD_PLAN)}
-          />
-        </Layout.Section>
-        <Layout.Section>
-          <PlanCard 
-            title="Plano Premium" 
-            benefits={[
-              "Benefício 1 do Plano Premium",
-              "Benefício 2 do Plano Premium",
-              "Benefício 3 do Plano Premium",
-              "Benefício 4 do Plano Premium",
-              "Benefício 5 do Plano Premium"
-            ]}
-            onSelect={selectPlan(PREMIUM_PLAN)}
-          />
+          <Stack vertical>
+            <PlanCard 
+              title="Plano Básico"
+              benefits={["Benefício 1", "Benefício 2", "Benefício 3"]}
+              onSelect={selectPlan(BASIC_PLAN)}
+              isCurrentPlan={currentPlan === BASIC_PLAN}
+            />
+            <PlanCard 
+              title="Plano Padrão"
+              benefits={["Benefício 1", "Benefício 2", "Benefício 3"]}
+              onSelect={selectPlan(STANDARD_PLAN)}
+              isCurrentPlan={currentPlan === STANDARD_PLAN}
+            />
+            <PlanCard 
+              title="Plano Premium"
+              benefits={["Benefício 1", "Benefício 2", "Benefício 3"]}
+              onSelect={selectPlan(PREMIUM_PLAN)}
+              isCurrentPlan={currentPlan === PREMIUM_PLAN}
+            />
+          </Stack>
         </Layout.Section>
       </Layout>
     </Page>
